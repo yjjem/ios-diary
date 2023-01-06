@@ -9,10 +9,9 @@ import Foundation
 
 struct NetworkManager {
     
-    func requestData<T: Decodable>(url: String,
+    func requestData<T: Decodable>(url: URL,
                                    type: T.Type,
                                    handler: @escaping (Result<T, NetworkError>) -> Void) {
-        guard let url = URL(string: url) else { return }
         let urlSession = URLSession(configuration: .default)
         let request = URLRequest(url: url)
         let task = urlSession.dataTask(with: request) { data, response, error in
@@ -38,7 +37,6 @@ struct NetworkManager {
                                                      from: data)
                 handler(.success(decodedData))
             } catch {
-                print(error)
                 handler(.failure(.decodeFailed))
             }
         }

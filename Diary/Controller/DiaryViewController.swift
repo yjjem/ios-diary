@@ -42,11 +42,9 @@ final class DiaryViewController: UIViewController {
     }
     
     private func getWeatherData() {
-        networkManager.requestData(url: WeatherAPI.host
-                                   + WeatherAPI.path
-                                   + WeatherAPI.query
-                                   + WeatherAPI.apiKey,
-                                   type: OpenWeather.self) { data in
+        let urlComponenets = NetworkURL.weatherData(latitude: "10", longitude: "10")
+        guard let url = urlComponenets.url else { return }
+        networkManager.requestData(url: url, type: OpenWeather.self) { data in
             switch data {
             case .success(let data):
                 let weather = data.weather
