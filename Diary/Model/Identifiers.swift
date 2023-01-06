@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Identifier {
+enum Identifiers {
     static let detalViewControllerID = "detailViewController"
     static let diaryTableViewCellID = "diaryTableViewCell"
 }

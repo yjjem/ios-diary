@@ -8,8 +8,10 @@ import UIKit
 
 final class DiaryViewController: UIViewController {
     private var diaryData: [DiaryData] = []
+    private var weather: Weather?
     private var dataSource: UITableViewDiffableDataSource<Section, DiaryData>?
     private var coreDataManager: CoreDataManager = CoreDataManager()
+    private var networkManager: NetworkManager = NetworkManager()
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,6 +21,7 @@ final class DiaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
+        getWeatherData()
         configureDataSource()
         configureSnapshot()
         setTableView()
@@ -33,9 +36,27 @@ final class DiaryViewController: UIViewController {
     @IBAction func tapAddBarButtonItem(_ sender: UIBarButtonItem) {
         coreDataManager.create()
         diaryData = coreDataManager.fetch()
-        let detailViewController = storyboard?.instantiateViewController(identifier: Identifier.detalViewControllerID) as? DetailViewController ?? DetailViewController()
+        let detailViewController = storyboard?.instantiateViewController(identifier: Identifiers.detalViewControllerID) as? DetailViewController ?? DetailViewController()
         detailViewController.diaryData = self.diaryData.last
         self.navigationController?.pushViewController(detailViewController, animated: true)
+    }
+    
+    private func getWeatherData() {
+        networkManager.requestData(url: WeatherAPI.host
+                                   + WeatherAPI.path
+                                   + WeatherAPI.query
+                                   + WeatherAPI.apiKey,
+                                   type: OpenWeather.self) { data in
+            switch data {
+            case .success(let data):
+                let weather = data.weather
+                DispatchQueue.main.async {
+                    self.weather = weather.first
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     private func getDiaryData() {
@@ -56,7 +77,7 @@ final class DiaryViewController: UIViewController {
         tableView.delegate = self
         tableView.register(UINib(nibName: String(describing: DiaryTableViewCell.self),
                                  bundle: nil),
-                           forCellReuseIdentifier: Identifier.diaryTableViewCellID)
+                           forCellReuseIdentifier: Identifiers.diaryTableViewCellID)
     }
 }
 
@@ -64,7 +85,7 @@ final class DiaryViewController: UIViewController {
 extension DiaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let detailViewController: DetailViewController =
-                storyboard?.instantiateViewController(withIdentifier: Identifier.detalViewControllerID)
+                storyboard?.instantiateViewController(withIdentifier: Identifiers.detalViewControllerID)
                 as? DetailViewController else { return }
         detailViewController.setDiaryData(diaryData: diaryData[indexPath.row])
         navigationController?.pushViewController(detailViewController, animated: true)
@@ -80,7 +101,7 @@ extension DiaryViewController {
     private func configureDataSource() {
         dataSource = UITableViewDiffableDataSource<Section, DiaryData>(tableView: tableView,
                                                    cellProvider: { tableView, indexPath, data in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.diaryTableViewCellID,
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: Identifiers.diaryTableViewCellID,
                                                            for: indexPath) as? DiaryTableViewCell
             else {
                 return UITableViewCell()
