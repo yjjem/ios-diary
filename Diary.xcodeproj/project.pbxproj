@@ -42,6 +42,7 @@
 		D2AFFCF9295DA957000DFF36 /* DiaryData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiaryData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D2AFFCFD295DA9AA000DFF36 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		DF12B4B32966E1540042CD64 /* SeparatedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatedText.swift; sourceTree = "<group>"; };
+		DF12B4B52967C6CF0042CD64 /* Diary v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Diary v2.xcdatamodel"; sourceTree = "<group>"; };
 		DF75497C29531FF2006FEF9E /* DiaryTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DiaryTableViewCell.xib; sourceTree = "<group>"; };
 		DF75497E29532991006FEF9E /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -453,9 +454,10 @@
 		C739AE2D284DF28600741E8F /* Diary.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DF12B4B52967C6CF0042CD64 /* Diary v2.xcdatamodel */,
 				C739AE2E284DF28600741E8F /* Diary.xcdatamodel */,
 			);
-			currentVersion = C739AE2E284DF28600741E8F /* Diary.xcdatamodel */;
+			currentVersion = DF12B4B52967C6CF0042CD64 /* Diary v2.xcdatamodel */;
 			path = Diary.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

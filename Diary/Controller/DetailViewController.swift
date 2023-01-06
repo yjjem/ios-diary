@@ -77,10 +77,6 @@ extension DetailViewController {
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(sceneWillDeactivate),
-                                               name: UIApplication.willResignActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(sceneWillDeactivate),
                                                name: UIScene.willDeactivateNotification,
                                                object: nil)
     }
