@@ -11,6 +11,7 @@ final class DiaryTableViewCell: UITableViewCell {
     @IBOutlet weak private var titleLabel: UILabel!
     @IBOutlet weak private var createdAtLabel: UILabel!
     @IBOutlet weak private var bodyLabel: UILabel!
+    @IBOutlet weak var iconImageView: UIImageView!
     
     override func prepareForReuse() {
         super.prepareForReuse()
