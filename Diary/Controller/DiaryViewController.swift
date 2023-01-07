@@ -13,7 +13,6 @@ final class DiaryViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, DiaryData>?
     private var coreDataManager: CoreDataManager = CoreDataManager()
     private var networkManager: NetworkManager = NetworkManager()
-    private var locationManager: CLLocationManager = CLLocationManager()
     private var location: Location?
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -23,8 +22,6 @@ final class DiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
         view.addSubview(tableView)
         configureDataSource()
         configureSnapshot()
@@ -123,65 +120,4 @@ extension DiaryViewController {
         snapShot.reloadSections([.main])
         dataSource?.apply(snapShot, animatingDifferences: false)
     }
-}
-
-// MARK: - CLLocation Delegate
-
-extension DiaryViewController: CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let coordinate = locations.last?.coordinate else { return }
-        let latitude = coordinate.latitude.description
-        let longitude = coordinate.longitude.description
-        print(latitude, longitude)
-        location = Location(latitude: latitude, longitude: longitude)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-    }
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkUserDivicesLocationAuthorization()
-    }
-    
-    func checkUserDivicesLocationAuthorization() {
-        DispatchQueue.global().async {
-            guard CLLocationManager.locationServicesEnabled() else {
-                self.locationSettingAlert()
-                return
-            }
-        }
-        
-        // 2. 현재, 앱의 허용수준을 체크하여 허용수준에 따라 분기처리한다.
-        let authorizaitonStatus: CLAuthorizationStatus
-        authorizaitonStatus = locationManager.authorizationStatus
-        handleAccordingToAuthorizationStatusLevel(authorizaitonStatus)
-    }
-    
-    func handleAccordingToAuthorizationStatusLevel(_ status: CLAuthorizationStatus) {
-        switch status {
-        case .notDetermined:
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.requestWhenInUseAuthorization()
-        case .denied, .restricted:
-            locationSettingAlert()
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-        default:
-            print("Default")
-        }
-    }
-    
-    private func locationSettingAlert() {
-        let alert = UIAlertController(title: "위치를 설정해주세요.", message: "설정으로이동", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "네", style: .default) { action in
-            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-            UIApplication.shared.open(url)
-        }
-        let noAction = UIAlertAction(title: "취소", style: .cancel)
-        alert.addAction(okAction)
-        alert.addAction(noAction)
-        present(alert, animated: true)
-    }
-    
 }
